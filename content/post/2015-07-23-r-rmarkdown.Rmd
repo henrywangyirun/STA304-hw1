@@ -1,0 +1,145 @@
+---
+title: "Covid-19 study"
+author: "Yirun Wang"
+date: "19/09/2020"
+abstract: "All over the world is studing Covid-19, and it is important to know how to protect us from the disease. In this paper we explore the Covid-19 in Toronto dataset. We find that number of infection in each age group is different. Our findings have implication for making decision on using different measures to protect people from different age group "
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+	
+library(opendatatoronto)
+library(dplyr)
+library(tidyverse)
+library(visdat)
+library(skimr)
+```
+
+# Introduction
+
+At the beginning of the 2020, the outbreak of global pandemic (Covid-19) causes the global panic in public health, economy, society and so on. More and more people is being impacted by this global pandemic, and it is important for us to know how to protect people from the illness. People from different age group may have different risk of being infected with coronavious due to their immune systeml in their body or attitude towards the illness. This provides us motivation for studing which age group has the most risk of being sick. Then we could give specific action on specfic age group in order to keep them safe. From the data provided by Toronto public heath, we can observe that the proportion of infected people from 20 to 60 years old is higher than children and old people. We may conclude that 20 to 60 years old people has higher risk of being sick than others.One of the possible reason could explain that is they need to work and social, therefore they may have higher chance to encounter the virus.
+  
+Through the Toronto Open Data Portal, I found the data published by Toronto Public Health which describes the Covid-19 cases in Toronto. Each line of the data is the individual cases includes the variable "Age group" that tells us the individual is at what age group. I made histogram to estimate the distribution plot to see where the data is centered at.In addition, I split the data into two parts male and female, and repeat the steps to see whether there exist difference in different sex. As a result, the data is concentrated at 20 to 60 years old both in male and female which gives us idea that people in 20s and middle-aged and elderly have higher chance to get Covid-19. 
+  
+The paper will show you several sections. In Data section, there will be data and some plots to let you visualize some results. In Discussion part, I will disscuss some fact behind the data and explain my finding. In further work and weakness section, I will talk about some weakness such as the consideration of Overdispersion and the plan for further work.
+
+
+```{r}
+#install.packages("opendatatoronto")
+package <- show_package("64b54586-6180-4485-83eb-81e8fae3b8fe")
+resources <- list_package_resources("64b54586-6180-4485-83eb-81e8fae3b8fe")
+datastore_resources <- filter(resources, tolower(format) %in% c('csv', 'geojson'))
+covid19_data <- datastore_resources %>%
+  get_resource()
+```
+
+# Data
+
+The Covid cases in Toronto dataset is published by Toronto Public Health.This data set contains demographic, geographic, severity information for all confirmed and probable cases reported to and managed by Toronto Public Health since the first case was reported in January 2020 (reference to https://open.toronto.ca/dataset/covid-19-cases-in-toronto/). Each line of the data set descibes the indivual. We will focus on variable "Age Group" and "Client gender" in the stuy. There are 18 variables. All of them is the categorical variable. "id" and "Assigned ID" tells us the id of the individuals. "Age Group" tells us the individual's age is at what age group. "Neighbourhood Name" tells the what neighbourhood they live. "FSA" is Forward sortation area (i.e. first three characters of postal code) based on the case's primary home address. "Source of infection" is the potential acquisition sources. "Classification" is the variable to categorize the cases as confirmed or probable. "Episode Date" estimates when the disease was acquired. "Reported Date" is the date on which the case was reported to Toronto Public Health. "Client Gender" is self-reported gender. "Outcome" is the outcome of the cases such as fatal, resolved or active. "Currently Hospitalized" is whether cases that are currently admitted to hospital. "Currently in ICU" is whether cases that are currently admitted to the intensive care unit. "Currently Intubated" is cases that were intubated related to their COVID-19 infection. "Ever Hospitalized" is whether cases that were hospitalized related to their COVID-19 infection. "Ever in ICU" is whether cases that were admitted to the intensive care unit. "Ever Intubated" is whether cases that were intubated related to their COVID-19 infection.(all the information comes from https://open.toronto.ca/dataset/covid-19-cases-in-toronto/).
+
+```{r}
+head(covid19_data)
+```
+
+This gives us the idea of what the data set looks like. The Age Group variable indicates what age group is the individual at and Client sex variable shows the sex of the individual. In the first 6 cases, we see that 5 cases is in age group 50 to 59 and 60 to 69 (Middle-aged and elderly). There are 18 variables. All of them is the categorical variable. 
+
+```{r}
+visdat::vis_dat(covid19_data)
+skimr::skim(covid19_data)
+
+covid19_data <- covid19_data %>%
+  select(`Age Group`, `Client Gender`)
+
+```
+
+There are 18 variables which all are categorical variable. All of these variable are character expect "ID" and "Assigned ID" which they are interger. We will focus only two variable in our study "Age Group" and "Client gender". There are 10 categories in "Age Group" that is 19 and younger, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80-89, 90+, unknown.There are 2 cases in "Client gender" male and female.
+
+```{r}
+covid19_data_summary <- covid19_data %>%
+  group_by(`Age Group`) %>%
+  summarise(count = n())
+covid19_data_summary
+percentage <- (2714 + 2519 + 2325 + 2616) / 16942
+percentage
+```
+
+```{r}
+covid19_data %>% 
+  ggplot(aes(x = `Age Group`)) +
+  geom_bar() +
+  labs(x = "Age Group",
+       y = "Number",
+       title = "Distribution of Age group in 2020 Covid-19 infection",
+       caption = "Source: Toronto Public Health, 2020.") +
+  theme_bw()
+```
+
+In this graph we find that distribution of Age Group is a little left skewed. Most of the data is center at 20 to 60 years old. About 60% of the data is concentrated at 20 to 60 years old. "20 to 29 years old" has the highest counts 2714. "50 to 59 years old" is the second which has 2616 counts. Therefore, we can conclude that most cases of infection is within age 20 to 60 years old, and they are is high risk of being sick.
+
+```{r}
+covid19_data_male <- covid19_data %>%
+  filter(`Client Gender` == "MALE")
+covid19_data_summary_male <- covid19_data_male %>%
+  group_by(`Age Group`) %>%
+  summarise(count = n())
+covid19_data_summary_male
+```
+```{r}
+covid19_data_male %>% 
+  ggplot(aes(x = `Age Group`)) +
+  geom_bar() +
+  labs(x = "Age Group",
+       y = "Number",
+       title = "Distribution of Age group in 2020 Covid-19 male infection",
+       caption = "Source: Toronto Public Health, 2020.") +
+  theme_bw()
+```
+
+In this graph we find that distribution of Age Group in male is also left skewed. It is similar to the first graph that nearly 60% of the data is concentrated at 20 to 60 years old. Therefore, distribution in male group is very similar as in first graph, and 20 and 60 years old in male has highest risk of getting sick.
+
+```{r}
+covid19_data_female <- covid19_data %>%
+  filter(`Client Gender` == "FEMALE")
+covid19_data_summary_female <- covid19_data_female %>%
+  group_by(`Age Group`) %>%
+  summarise(count = n())
+covid19_data_summary_female
+```
+
+```{r}
+covid19_data_female %>% 
+  ggplot(aes(x = `Age Group`)) +
+  geom_bar() +
+  labs(x = "Age Group",
+       y = "Number",
+       title = "Distribution of Age group in 2020 Covid-19 female infection",
+       caption = "Source: Toronto Public Health, 2020.") +
+  theme_bw()
+```
+
+In this graph we find that distribution of Age Group in female is also left skewed. About 60% of the data still concentrated at 20 to 60 years old. However, the proportion of people in female get covid-19 from 80 to 90 and older is higher than male. We can conclude that female in age group 80 and older have higher chance of getting sick than male, and 20 to 60 years old is still the highest risk among others.
+
+# Discussion
+
+My discussion is based on two variables "Age group" and "Client gender". Through the distribution of Age group we find that most cases (60% of data) is concentrated at 20 to 60 years old. 20 to 29 years old has the highest counts 2714 and 50 to 59 years old has the second highest counts 2616. Due to the large proportion of cases of infection in 20 to 60 years old we can conclude that 20 to 60 years old people has highest chance of getting covid-19. 20 to 60 years old people is at most risk of being sick, and we should take specific action on protecting those people. When we look at distribution of Age group in male and in female seperately, we find that their distribution are very similar to each other except for 80 and older people.  Female people who's age is 80 and older may have higher risk of getting covid-19 than male in 80 years old and older. Generally, we can conclude that people from 20 to 60 years old is at most risk, and for people who is female and 80 years old and older should be more careful than male. 
+In addition, we see that there exist 18 NA cases. Those 18 cases that is non-response, so we should think of what if those infection cases are all male or female. In my opinion, those non-response won't effect the result too much. Total cases are 16942 counts, but only 18 cases is non-response. The proportion of non-response rate is very low (18/16942), therefore we it won't effect my result a lot.
+
+## Weakness and next steps
+
+I believe the weakness in my stduy is lack of data of population in Toronto. The data does not include the total population of each age group in Toronto. If the population of young people is large and population of elder is small, then our analysis is not accurate. In other word, there must be lots of cases of infection in 20 to 60 years old if population of 20 to 60 years old is large. Our next step should be finding data of population in each group in order to verify our result.
+
+
+# Reference
+- Toronto Public Health, provincial communicable disease reporting system (iPHIS), Toronto's custom COVID-19 case management system (CORES), 2020, 'COVID-19 Cases in Toronto', https://open.toronto.ca/dataset/covid-19-cases-in-toronto/, Open Data Toronto.
+-   Sharla Gelfand (2020). opendatatoronto: Access the City of Toronto Open Data Portal. R package version 0.1.3.
+  https://CRAN.R-project.org/package=opendatatoronto
+-   Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2019). dplyr: A Grammar of Data Manipulation. R package
+  version 0.8.3. https://CRAN.R-project.org/package=dplyr
+-  Hadley Wickham (2017). tidyverse: Easily Install and Load the 'Tidyverse'. R package version 1.2.1.
+  https://CRAN.R-project.org/package=tidyverse
+- Tierney N (2017). “visdat: Visualising Whole Data Frames.” _JOSS_, *2*(16), 355. doi: 10.21105/joss.00355 (URL:
+https://doi.org/10.21105/joss.00355), <URL: http://dx.doi.org/10.21105/joss.00355>.
+-   Elin Waring, Michael Quinn, Amelia McNamara, Eduardo Arino de la Rubia, Hao Zhu and Shannon Ellis (2020). skimr: Compact
+  and Flexible Summaries of Data. R package version 2.1.2. https://CRAN.R-project.org/package=skimr
+
