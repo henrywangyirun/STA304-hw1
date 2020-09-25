@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.75.1" />
+
+
+<title>Risk of geting Covid-19 at different Age group - YIRUN&#39;s website</title>
+<meta property="og:title" content="Risk of geting Covid-19 at different Age group - YIRUN&#39;s website">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/henrywangyirun">GitHub</a></li>
+    
+    <li><a href="https://twitter.com/rstudio">Twitter</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">11 min read</span>
+    
+
+    <h1 class="article-title">Risk of geting Covid-19 at different Age group</h1>
+
+    
+    <span class="article-meta">
+      Yirun Wang / 23 Sep 2020<br>
+      <br>
+      All over the world is studing Covid-19, and it is important to know how to protect us from the disease. In this paper we explore the Covid-19 in Toronto dataset. We find that different age group has different risk of getting Covid-19.  Our findings have implication for making decision on using different measures to protect people from different age group 
+    </span>
+    
+
+    <div class="article-content">
+      
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>At the beginning of the 2020, the outbreak of global pandemic (Covid-19) causes the global panic in public health, economy, society and so on. More and more people is being impacted by this global pandemic, and it is important for us to know how to protect people from the illness for specific age group. This provides us motivation for studing which age group has the most risk of being sick. Then we could give specific action on specfic age group in order to keep them safe. From the data provided by Toronto public heath, we can observe that the proportion of infected people from 20 to 60 years old is higher than children and old people. We may conclude that 20 to 60 years old people has higher risk of being sick than others.One of the possible reason could explain that is people in these age groups need to work and social frequently, therefore they may have higher chance to encounter the virus.</p>
+<p>Through the Toronto Open Data Portal, I found the data published by Toronto Public Health which describes the Covid-19 cases in Toronto. Each line of the data is the individual cases includes the variable “Age group” that tells us the individual is at what age group. I made histogram to estimate the distribution plot to see where the data is centered at. In addition, I split the data into two parts male and female, and repeat the steps to see whether there exist difference in different sex. As a result, the data is concentrated at 20 to 60 years old both in male and female which gives us idea that people in 20s and middle-aged and elderly have higher chance to get Covid-19.</p>
+<p>The paper will show you several sections. In Data section, there will be data and some plots to let you visualize some results. In Discussion part, I will disscuss some fact behind the data and explain my finding. In further work and weakness section, I will talk about some weakness such as the consideration of Overdispersion and the plan for further work.</p>
+<pre class="r"><code>#install.packages(&quot;opendatatoronto&quot;)
+package &lt;- show_package(&quot;64b54586-6180-4485-83eb-81e8fae3b8fe&quot;)
+resources &lt;- list_package_resources(&quot;64b54586-6180-4485-83eb-81e8fae3b8fe&quot;)
+datastore_resources &lt;- filter(resources, tolower(format) %in% c(&#39;csv&#39;, &#39;geojson&#39;))
+covid19_data &lt;- datastore_resources %&gt;%
+  get_resource()</code></pre>
+</div>
+<div id="data" class="section level1">
+<h1>Data</h1>
+<p>The Covid cases in Toronto dataset is published by Toronto Public Health.This data set contains demographic, geographic, severity information for all confirmed and probable cases reported to and managed by Toronto Public Health since the first case was reported in January 2020 (reference to <a href="https://open.toronto.ca/dataset/covid-19-cases-in-toronto/" class="uri">https://open.toronto.ca/dataset/covid-19-cases-in-toronto/</a>). Each line of the data set descibes the indivual.There are 16942 observations and 18 variables in our data set. All of them are the categorical variable. “id” and “Assigned ID” tells us the id of the individuals. “Age Group” tells us the individual’s age is at what age group. “Neighbourhood Name” tells the what neighbourhood they live. “FSA” is Forward sortation area (i.e. first three characters of postal code) based on the case’s primary home address. “Source of infection” is the potential acquisition sources. “Classification” is the variable to categorize the cases as confirmed or probable. “Episode Date” estimates when the disease was acquired. “Reported Date” is the date on which the case was reported to Toronto Public Health. “Client Gender” is self-reported gender. “Outcome” is the outcome of the cases such as fatal, resolved or active. “Currently Hospitalized” is whether cases that are currently admitted to hospital. “Currently in ICU” is whether cases that are currently admitted to the intensive care unit. “Currently Intubated” is cases that were intubated related to their COVID-19 infection. “Ever Hospitalized” is whether cases that were hospitalized related to their COVID-19 infection. “Ever in ICU” is whether cases that were admitted to the intensive care unit. “Ever Intubated” is whether cases that were intubated related to their COVID-19 infection.(all the information comes from <a href="https://open.toronto.ca/dataset/covid-19-cases-in-toronto/" class="uri">https://open.toronto.ca/dataset/covid-19-cases-in-toronto/</a>).</p>
+<pre class="r"><code>head(covid19_data)</code></pre>
+<pre><code>## # A tibble: 6 x 18
+##    `_id` Assigned_ID `Outbreak Assoc… `Age Group` `Neighbourhood … FSA  
+##    &lt;int&gt;       &lt;int&gt; &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;            &lt;chr&gt;
+## 1 143647           1 Sporadic         50 to 59 Y… Willowdale East  M2N  
+## 2 143648           2 Sporadic         50 to 59 Y… Willowdale East  M2N  
+## 3 143649           3 Sporadic         20 to 29 Y… Parkwoods-Donal… M3A  
+## 4 143650           4 Sporadic         60 to 69 Y… Church-Yonge Co… M4W  
+## 5 143651           5 Sporadic         60 to 69 Y… Church-Yonge Co… M4W  
+## 6 143652           6 Sporadic         50 to 59 Y… Newtonbrook West M2R  
+## # … with 12 more variables: `Source of Infection` &lt;chr&gt;, Classification &lt;chr&gt;,
+## #   `Episode Date` &lt;chr&gt;, `Reported Date` &lt;chr&gt;, `Client Gender` &lt;chr&gt;,
+## #   Outcome &lt;chr&gt;, `Currently Hospitalized` &lt;chr&gt;, `Currently in ICU` &lt;chr&gt;,
+## #   `Currently Intubated` &lt;chr&gt;, `Ever Hospitalized` &lt;chr&gt;, `Ever in
+## #   ICU` &lt;chr&gt;, `Ever Intubated` &lt;chr&gt;</code></pre>
+<p>This gives us the general idea of what the data set looks like. The Age Group variable indicates what age group is the individual at and Client sex variable shows the sex of the individual. In the first 6 cases, we see that 5 cases is in age group 50 to 59 and 60 to 69 (Middle-aged and elderly).</p>
+<pre class="r"><code>visdat::vis_dat(covid19_data)</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>skimr::skim(covid19_data)</code></pre>
+<table>
+<caption><span id="tab:unnamed-chunk-3">Table 1: </span>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">covid19_data</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">17872</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">18</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">16</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Outbreak Associated</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">8</td>
+<td align="right">19</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Age Group</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">14</td>
+<td align="right">0</td>
+<td align="right">10</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Neighbourhood Name</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">35</td>
+<td align="right">0</td>
+<td align="right">141</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">FSA</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">97</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Source of Infection</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">6</td>
+<td align="right">25</td>
+<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Classification</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">8</td>
+<td align="right">9</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Episode Date</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">0</td>
+<td align="right">217</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Reported Date</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="right">0</td>
+<td align="right">212</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Client Gender</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">11</td>
+<td align="right">0</td>
+<td align="right">5</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Outcome</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Currently Hospitalized</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Currently in ICU</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Currently Intubated</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Ever Hospitalized</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Ever in ICU</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Ever Intubated</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">_id</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">152582.50</td>
+<td align="right">5159.35</td>
+<td align="right">143647</td>
+<td align="right">148114.75</td>
+<td align="right">152582.5</td>
+<td align="right">157050.25</td>
+<td align="right">161518</td>
+<td align="left">▇▇▇▇▇</td>
+</tr>
+<tr class="even">
+<td align="left">Assigned_ID</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">9026.35</td>
+<td align="right">5248.05</td>
+<td align="right">1</td>
+<td align="right">4482.75</td>
+<td align="right">8984.5</td>
+<td align="right">13529.25</td>
+<td align="right">18202</td>
+<td align="left">▇▇▇▇▇</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>covid19_data &lt;- covid19_data %&gt;%
+  select(`Age Group`, `Client Gender`)</code></pre>
+<p>There are 18 variables which all are categorical variable. All of these variable are character expect “ID” and “Assigned ID” which they are interger. We will focus only two variable in our study “Age Group” and “Client gender”. There are 10 categories in “Age Group” that is 19 and younger, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80-89, 90+, unknown.There are 2 cases in “Client gender” male and female.</p>
+<pre class="r"><code>covid19_data_summary &lt;- covid19_data %&gt;%
+  group_by(`Age Group`) %&gt;%
+  summarise(count = n())
+covid19_data_summary</code></pre>
+<pre><code>## # A tibble: 10 x 2
+##    `Age Group`    count
+##    &lt;chr&gt;          &lt;int&gt;
+##  1 19 and younger  1311
+##  2 20 to 29 Years  3049
+##  3 30 to 39 Years  2724
+##  4 40 to 49 Years  2416
+##  5 50 to 59 Years  2720
+##  6 60 to 69 Years  1813
+##  7 70 to 79 Years  1133
+##  8 80 to 89 Years  1557
+##  9 90 and older    1116
+## 10 NaN               33</code></pre>
+<pre class="r"><code>percentage &lt;- (2714 + 2519 + 2325 + 2616) / 16942
+percentage</code></pre>
+<pre><code>## [1] 0.6005194</code></pre>
+<pre class="r"><code>covid19_data %&gt;% 
+  ggplot(aes(x = `Age Group`)) +
+  geom_bar() +
+  labs(x = &quot;Age Group&quot;,
+       y = &quot;Number&quot;,
+       title = &quot;Distribution of Age group in 2020 Covid-19 infection&quot;,
+       caption = &quot;Source: Toronto Public Health, 2020.&quot;) +
+  theme_bw()</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>In this graph we find that distribution of Age Group is a little left skewed. Most of the data is center at 20 to 60 years old. About 60% of the data is concentrated at 20 to 60 years old. “20 to 29 years old” has the highest counts 2714. “50 to 59 years old” is the second which has 2616 counts. Therefore, we can conclude that most cases of infection is within age 20 to 60 years old, and people in this age group is at high rik of being sick.</p>
+<pre class="r"><code>covid19_data_male &lt;- covid19_data %&gt;%
+  filter(`Client Gender` == &quot;MALE&quot;)
+covid19_data_summary_male &lt;- covid19_data_male %&gt;%
+  group_by(`Age Group`) %&gt;%
+  summarise(count = n())
+covid19_data_summary_male</code></pre>
+<pre><code>## # A tibble: 10 x 2
+##    `Age Group`    count
+##    &lt;chr&gt;          &lt;int&gt;
+##  1 19 and younger   658
+##  2 20 to 29 Years  1540
+##  3 30 to 39 Years  1369
+##  4 40 to 49 Years  1095
+##  5 50 to 59 Years  1221
+##  6 60 to 69 Years   912
+##  7 70 to 79 Years   561
+##  8 80 to 89 Years   539
+##  9 90 and older     267
+## 10 NaN               22</code></pre>
+<pre class="r"><code>covid19_data_male %&gt;% 
+  ggplot(aes(x = `Age Group`)) +
+  geom_bar() +
+  labs(x = &quot;Age Group&quot;,
+       y = &quot;Number&quot;,
+       title = &quot;Distribution of Age group in 2020 Covid-19 male infection&quot;,
+       caption = &quot;Source: Toronto Public Health, 2020.&quot;) +
+  theme_bw()</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>In this graph we find that distribution of Age Group in male is also left skewed. It is similar to the first graph that nearly 60% of the data is concentrated at 20 to 60 years old. Therefore, distribution in male group is very similar as in first graph, and 20 and 60 years old in male is also at highest risk of getting sick.</p>
+<pre class="r"><code>covid19_data_female &lt;- covid19_data %&gt;%
+  filter(`Client Gender` == &quot;FEMALE&quot;)
+covid19_data_summary_female &lt;- covid19_data_female %&gt;%
+  group_by(`Age Group`) %&gt;%
+  summarise(count = n())
+covid19_data_summary_female</code></pre>
+<pre><code>## # A tibble: 10 x 2
+##    `Age Group`    count
+##    &lt;chr&gt;          &lt;int&gt;
+##  1 19 and younger   621
+##  2 20 to 29 Years  1486
+##  3 30 to 39 Years  1328
+##  4 40 to 49 Years  1290
+##  5 50 to 59 Years  1483
+##  6 60 to 69 Years   883
+##  7 70 to 79 Years   554
+##  8 80 to 89 Years   967
+##  9 90 and older     805
+## 10 NaN               10</code></pre>
+<pre class="r"><code>covid19_data_female %&gt;% 
+  ggplot(aes(x = `Age Group`)) +
+  geom_bar() +
+  labs(x = &quot;Age Group&quot;,
+       y = &quot;Number&quot;,
+       title = &quot;Distribution of Age group in 2020 Covid-19 female infection&quot;,
+       caption = &quot;Source: Toronto Public Health, 2020.&quot;) +
+  theme_bw()</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>In this graph we find that distribution of Age Group in female is also left skewed. About 60% of the data still concentrated at 20 to 60 years old. However, the proportion of people in female get covid-19 from 80 to 90 and older is higher than male. We can conclude that female in age group 80 and older have higher chance of getting sick than male, and 20 to 60 years old is still the highest risk among others.</p>
+</div>
+<div id="discussion" class="section level1">
+<h1>Discussion</h1>
+<p>My discussion is based on two variables “Age group” and “Client gender”. Through the distribution of Age group we find that most cases (60% of data) is concentrated at 20 to 60 years old. 20 to 29 years old has the highest counts 2714 and 50 to 59 years old has the second highest counts 2616. Due to the large proportion of cases of infection in 20 to 60 years old we can conclude that 20 to 60 years old people has highest chance of getting covid-19. 20 to 60 years old people is at most risk of being sick, and we should take specific action on protecting those people. When we look at distribution of Age group in male and in female seperately, we find that their distribution are very similar to each other except for 80 and older people. Female people who’s age is 80 and older may have higher risk of getting covid-19 than male in 80 years old and older. Generally, we can conclude that people from 20 to 60 years old is at most risk, and for people who is female and 80 years old and older should be more careful than male.
+In addition, we see that there exist 18 NA cases. Those 18 cases that is non-response, so we should think of what if those infection cases are all male or female. In my opinion, those non-response won’t effect the result too much. Total cases are 16942 counts, but only 18 cases is non-response. The proportion of non-response rate is very low (18/16942), therefore we it won’t effect my result a lot.</p>
+<div id="weakness-and-next-steps" class="section level2">
+<h2>Weakness and next steps</h2>
+<p>I believe the weakness in my stduy is lack of data of population in Toronto. The data does not include the total population of each age group in Toronto. If the population of young people is large and population of elder is small, then our analysis is not accurate. In other word, there must be lots of cases of infection in 20 to 60 years old if population of 20 to 60 years old is large. Our next step should be finding data of population in each group in toronto in order to verify our result.</p>
+</div>
+</div>
+<div id="reference" class="section level1">
+<h1>Reference</h1>
+<ul>
+<li>Toronto Public Health, provincial communicable disease reporting system (iPHIS), Toronto’s custom COVID-19 case management system (CORES), 2020, ‘COVID-19 Cases in Toronto’, <a href="https://open.toronto.ca/dataset/covid-19-cases-in-toronto/" class="uri">https://open.toronto.ca/dataset/covid-19-cases-in-toronto/</a>, Open Data Toronto.</li>
+<li>Sharla Gelfand (2020). opendatatoronto: Access the City of Toronto Open Data Portal. R package version 0.1.3.
+<a href="https://CRAN.R-project.org/package=opendatatoronto" class="uri">https://CRAN.R-project.org/package=opendatatoronto</a></li>
+<li>Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2019). dplyr: A Grammar of Data Manipulation. R package
+version 0.8.3. <a href="https://CRAN.R-project.org/package=dplyr" class="uri">https://CRAN.R-project.org/package=dplyr</a></li>
+<li>Hadley Wickham (2017). tidyverse: Easily Install and Load the ‘Tidyverse’. R package version 1.2.1.
+<a href="https://CRAN.R-project.org/package=tidyverse" class="uri">https://CRAN.R-project.org/package=tidyverse</a></li>
+<li>Tierney N (2017). “visdat: Visualising Whole Data Frames.” <em>JOSS</em>, <em>2</em>(16), 355. doi: 10.21105/joss.00355 (URL:
+<a href="https://doi.org/10.21105/joss.00355" class="uri">https://doi.org/10.21105/joss.00355</a>), &lt;URL: <a href="http://dx.doi.org/10.21105/joss.00355" class="uri">http://dx.doi.org/10.21105/joss.00355</a>&gt;.</li>
+<li>Elin Waring, Michael Quinn, Amelia McNamara, Eduardo Arino de la Rubia, Hao Zhu and Shannon Ellis (2020). skimr: Compact
+and Flexible Summaries of Data. R package version 2.1.2. <a href="https://CRAN.R-project.org/package=skimr" class="uri">https://CRAN.R-project.org/package=skimr</a></li>
+</ul>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+
+    
+  </body>
+</html>
+

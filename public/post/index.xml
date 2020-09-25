@@ -6,7 +6,25 @@
     <description>Recent content in Posts on YIRUN&#39;s website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 30 Dec 2016 21:49:57 -0700</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 25 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>1</title>
+      <link>/2020/09/25/1/</link>
+      <pubDate>Fri, 25 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/09/25/1/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Different risk of geting Covid-19 at different Age level</title>
+      <link>/2020/09/23/different-risk-of-geting-covid-19-at-different-age-level/</link>
+      <pubDate>Wed, 23 Sep 2020 21:13:14 -0500</pubDate>
+      
+      <guid>/2020/09/23/different-risk-of-geting-covid-19-at-different-age-level/</guid>
+      <description>Introduction At the beginning of the 2020, the outbreak of global pandemic (Covid-19) causes the global panic in public health, economy, society and so on. More and more people is being impacted by this global pandemic, and it is important for us to know how to protect people from the illness for specific age group. This provides us motivation for studing which age group has the most risk of being sick.</description>
+    </item>
+    
     <item>
       <title>A Plain Markdown Post</title>
       <link>/2016/12/30/a-plain-markdown-post/</link>
@@ -24,15 +42,6 @@
       
       <guid>/2015/01/01/lorem-ipsum/</guid>
       <description>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</description>
-    </item>
-    
-    <item>
-      <title>Covid-19 study</title>
-      <link>/1/01/01/covid-19-study/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/1/01/01/covid-19-study/</guid>
-      <description>Introduction At the beginning of the 2020, the outbreak of global pandemic (Covid-19) causes the global panic in public health, economy, society and so on. More and more people is being impacted by this global pandemic, and it is important for us to know how to protect people from the illness. People from different age group may have different risk of being infected with coronavious due to their immune systeml in their body or attitude towards the illness.</description>
     </item>
     
   </channel>

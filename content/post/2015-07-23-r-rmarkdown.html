@@ -1,8 +1,9 @@
 ---
-title: "Covid-19 study"
+title: "Different risk of geting Covid-19 at different Age level"
 author: "Yirun Wang"
-date: "19/09/2020"
-abstract: "All over the world is studing Covid-19, and it is important to know how to protect us from the disease. In this paper we explore the Covid-19 in Toronto dataset. We find that number of infection in each age group is different. Our findings have implication for making decision on using different measures to protect people from different age group "
+date: 2020-09-23T21:13:14-05:00
+categories: ["R"]
+abstract: "All over the world is studing Covid-19, and it is important for us to know how to protect us from the disease. In this paper we explore the Covid-19 in Toronto dataset. We found that each age group has different level of risk of getting Covid-19.  Our findings have implication for making decision on using different measures to protect people from different age group "
 output: html_document
 ---
 
@@ -10,8 +11,8 @@ output: html_document
 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>At the beginning of the 2020, the outbreak of global pandemic (Covid-19) causes the global panic in public health, economy, society and so on. More and more people is being impacted by this global pandemic, and it is important for us to know how to protect people from the illness. People from different age group may have different risk of being infected with coronavious due to their immune systeml in their body or attitude towards the illness. This provides us motivation for studing which age group has the most risk of being sick. Then we could give specific action on specfic age group in order to keep them safe. From the data provided by Toronto public heath, we can observe that the proportion of infected people from 20 to 60 years old is higher than children and old people. We may conclude that 20 to 60 years old people has higher risk of being sick than others.One of the possible reason could explain that is they need to work and social, therefore they may have higher chance to encounter the virus.</p>
-<p>Through the Toronto Open Data Portal, I found the data published by Toronto Public Health which describes the Covid-19 cases in Toronto. Each line of the data is the individual cases includes the variable “Age group” that tells us the individual is at what age group. I made histogram to estimate the distribution plot to see where the data is centered at.In addition, I split the data into two parts male and female, and repeat the steps to see whether there exist difference in different sex. As a result, the data is concentrated at 20 to 60 years old both in male and female which gives us idea that people in 20s and middle-aged and elderly have higher chance to get Covid-19.</p>
+<p>At the beginning of the 2020, the outbreak of global pandemic (Covid-19) causes the global panic in public health, economy, society and so on. More and more people is being impacted by this global pandemic, and it is important for us to know how to protect people from the illness for specific age group. This provides us motivation for studing which age group has the most risk of being sick. Then we could give specific action on specfic age group in order to keep them safe. From the data provided by Toronto public heath, we can observe that the proportion of infected people from 20 to 60 years old is higher than children and old people. We may conclude that 20 to 60 years old people has higher risk of being sick than others.One of the possible reason could explain that is people in these age groups need to work and social frequently, therefore they may have higher chance to encounter the virus.</p>
+<p>Through the Toronto Open Data Portal, I found the data published by Toronto Public Health which describes the Covid-19 cases in Toronto. Each line of the data is the individual cases includes the variable “Age group” that tells us the individual is at what age group. I made histogram to estimate the distribution plot to see where the data is centered at. In addition, I split the data into two parts male and female, and repeat the steps to see whether there exist difference in different sex. As a result, the data is concentrated at 20 to 60 years old both in male and female which gives us idea that people in 20s and middle-aged and elderly have higher chance to get Covid-19.</p>
 <p>The paper will show you several sections. In Data section, there will be data and some plots to let you visualize some results. In Discussion part, I will disscuss some fact behind the data and explain my finding. In further work and weakness section, I will talk about some weakness such as the consideration of Overdispersion and the plan for further work.</p>
 <pre class="r"><code>#install.packages(&quot;opendatatoronto&quot;)
 package &lt;- show_package(&quot;64b54586-6180-4485-83eb-81e8fae3b8fe&quot;)
@@ -20,27 +21,29 @@ datastore_resources &lt;- filter(resources, tolower(format) %in% c(&#39;csv&#39;
 covid19_data &lt;- datastore_resources %&gt;%
   get_resource()</code></pre>
 </div>
+<div id="research-questions" class="section level1">
+<h1>Research questions</h1>
+<p>My research question is whether exist difference in risk of getting sick for people in each age group. The result of my research question can contribute in studing the habit of Covid-19. My insterst of finding is feasible, since the dataset has enough observation and has relevent variable(Age group) that allows me to conduct the stuy.</p>
+</div>
 <div id="data" class="section level1">
 <h1>Data</h1>
-<p>The Covid cases in Toronto dataset is published by Toronto Public Health.This data set contains demographic, geographic, severity information for all confirmed and probable cases reported to and managed by Toronto Public Health since the first case was reported in January 2020 (reference to <a href="https://open.toronto.ca/dataset/covid-19-cases-in-toronto/" class="uri">https://open.toronto.ca/dataset/covid-19-cases-in-toronto/</a>). Each line of the data set descibes the indivual. We will focus on variable “Age Group” and “Client gender” in the stuy. There are 18 variables. All of them is the categorical variable. “id” and “Assigned ID” tells us the id of the individuals. “Age Group” tells us the individual’s age is at what age group. “Neighbourhood Name” tells the what neighbourhood they live. “FSA” is Forward sortation area (i.e. first three characters of postal code) based on the case’s primary home address. “Source of infection” is the potential acquisition sources. “Classification” is the variable to categorize the cases as confirmed or probable. “Episode Date” estimates when the disease was acquired. “Reported Date” is the date on which the case was reported to Toronto Public Health. “Client Gender” is self-reported gender. “Outcome” is the outcome of the cases such as fatal, resolved or active. “Currently Hospitalized” is whether cases that are currently admitted to hospital. “Currently in ICU” is whether cases that are currently admitted to the intensive care unit. “Currently Intubated” is cases that were intubated related to their COVID-19 infection. “Ever Hospitalized” is whether cases that were hospitalized related to their COVID-19 infection. “Ever in ICU” is whether cases that were admitted to the intensive care unit. “Ever Intubated” is whether cases that were intubated related to their COVID-19 infection.(all the information comes from <a href="https://open.toronto.ca/dataset/covid-19-cases-in-toronto/" class="uri">https://open.toronto.ca/dataset/covid-19-cases-in-toronto/</a>).</p>
+<p>The Covid cases in Toronto dataset is published by Toronto Public Health.This data set contains demographic, geographic, severity information for all confirmed and probable cases reported to and managed by Toronto Public Health since the first case was reported in January 2020 (reference to <a href="https://open.toronto.ca/dataset/covid-19-cases-in-toronto/" class="uri">https://open.toronto.ca/dataset/covid-19-cases-in-toronto/</a>). Each line of the data set descibes the indivual case.There are 17872 observations and 18 variables in our data set. All of them are the categorical variable. “id” and “Assigned ID” tells us the id of the individuals. “Age Group” tells us the individual’s age is at what age group. “Neighbourhood Name” tells the what neighbourhood they live. “FSA” is Forward sortation area (i.e. first three characters of postal code) based on the case’s primary home address. “Source of infection” is the potential acquisition sources. “Classification” is the variable to categorize the cases as confirmed or probable. “Episode Date” estimates when the disease was acquired. “Reported Date” is the date on which the case was reported to Toronto Public Health. “Client Gender” is self-reported gender. “Outcome” is the outcome of the cases such as fatal, resolved or active. “Currently Hospitalized” is whether cases that are currently admitted to hospital. “Currently in ICU” is whether cases that are currently admitted to the intensive care unit. “Currently Intubated” is cases that were intubated related to their COVID-19 infection. “Ever Hospitalized” is whether cases that were hospitalized related to their COVID-19 infection. “Ever in ICU” is whether cases that were admitted to the intensive care unit. “Ever Intubated” is whether cases that were intubated related to their COVID-19 infection.(all these variable information also comes from <a href="https://open.toronto.ca/dataset/covid-19-cases-in-toronto/" class="uri">https://open.toronto.ca/dataset/covid-19-cases-in-toronto/</a>).</p>
 <pre class="r"><code>head(covid19_data)</code></pre>
 <pre><code>## # A tibble: 6 x 18
 ##    `_id` Assigned_ID `Outbreak Assoc… `Age Group` `Neighbourhood … FSA  
 ##    &lt;int&gt;       &lt;int&gt; &lt;chr&gt;            &lt;chr&gt;       &lt;chr&gt;            &lt;chr&gt;
-## 1 126705           1 Sporadic         50 to 59 Y… Willowdale East  M2N  
-## 2 126706           2 Sporadic         50 to 59 Y… Willowdale East  M2N  
-## 3 126707           3 Sporadic         20 to 29 Y… Parkwoods-Donal… M3A  
-## 4 126708           4 Sporadic         60 to 69 Y… Church-Yonge Co… M4W  
-## 5 126709           5 Sporadic         60 to 69 Y… Church-Yonge Co… M4W  
-## 6 126710           6 Sporadic         50 to 59 Y… Newtonbrook West M2R  
+## 1 143647           1 Sporadic         50 to 59 Y… Willowdale East  M2N  
+## 2 143648           2 Sporadic         50 to 59 Y… Willowdale East  M2N  
+## 3 143649           3 Sporadic         20 to 29 Y… Parkwoods-Donal… M3A  
+## 4 143650           4 Sporadic         60 to 69 Y… Church-Yonge Co… M4W  
+## 5 143651           5 Sporadic         60 to 69 Y… Church-Yonge Co… M4W  
+## 6 143652           6 Sporadic         50 to 59 Y… Newtonbrook West M2R  
 ## # … with 12 more variables: `Source of Infection` &lt;chr&gt;, Classification &lt;chr&gt;,
 ## #   `Episode Date` &lt;chr&gt;, `Reported Date` &lt;chr&gt;, `Client Gender` &lt;chr&gt;,
 ## #   Outcome &lt;chr&gt;, `Currently Hospitalized` &lt;chr&gt;, `Currently in ICU` &lt;chr&gt;,
 ## #   `Currently Intubated` &lt;chr&gt;, `Ever Hospitalized` &lt;chr&gt;, `Ever in
 ## #   ICU` &lt;chr&gt;, `Ever Intubated` &lt;chr&gt;</code></pre>
-<p>This gives us the idea of what the data set looks like. The Age Group variable indicates what age group is the individual at and Client sex variable shows the sex of the individual. In the first 6 cases, we see that 5 cases is in age group 50 to 59 and 60 to 69 (Middle-aged and elderly). There are 18 variables. All of them is the categorical variable.</p>
-<pre class="r"><code>visdat::vis_dat(covid19_data)</code></pre>
-<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>This gives us the general idea of what the data set looks like. The Age Group variable indicates what age group is the individual at and Client sex variable shows the sex of the individual. In the first 6 cases, we see that 5 cases is in age group 50 to 59 and 60 to 69 (Middle-aged and elderly).</p>
 <pre class="r"><code>skimr::skim(covid19_data)</code></pre>
 <table>
 <caption><span id="tab:unnamed-chunk-3">Table 1: </span>Data summary</caption>
@@ -51,7 +54,7 @@ covid19_data &lt;- datastore_resources %&gt;%
 </tr>
 <tr class="even">
 <td align="left">Number of rows</td>
-<td align="left">16942</td>
+<td align="left">17872</td>
 </tr>
 <tr class="odd">
 <td align="left">Number of columns</td>
@@ -165,7 +168,7 @@ covid19_data &lt;- datastore_resources %&gt;%
 <td align="right">10</td>
 <td align="right">10</td>
 <td align="right">0</td>
-<td align="right">210</td>
+<td align="right">217</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
@@ -175,7 +178,7 @@ covid19_data &lt;- datastore_resources %&gt;%
 <td align="right">10</td>
 <td align="right">10</td>
 <td align="right">0</td>
-<td align="right">205</td>
+<td align="right">212</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
@@ -282,53 +285,448 @@ covid19_data &lt;- datastore_resources %&gt;%
 <td align="left">_id</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">135175.50</td>
-<td align="right">4890.88</td>
-<td align="right">126705</td>
-<td align="right">130940.25</td>
-<td align="right">135175.5</td>
-<td align="right">139410.75</td>
-<td align="right">143646</td>
+<td align="right">152582.50</td>
+<td align="right">5159.35</td>
+<td align="right">143647</td>
+<td align="right">148114.75</td>
+<td align="right">152582.5</td>
+<td align="right">157050.25</td>
+<td align="right">161518</td>
 <td align="left">▇▇▇▇▇</td>
 </tr>
 <tr class="even">
 <td align="left">Assigned_ID</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">8539.88</td>
-<td align="right">4961.13</td>
+<td align="right">9026.35</td>
+<td align="right">5248.05</td>
 <td align="right">1</td>
-<td align="right">4243.25</td>
-<td align="right">8508.5</td>
-<td align="right">12808.75</td>
-<td align="right">17245</td>
+<td align="right">4482.75</td>
+<td align="right">8984.5</td>
+<td align="right">13529.25</td>
+<td align="right">18202</td>
 <td align="left">▇▇▇▇▇</td>
 </tr>
 </tbody>
 </table>
+<p>Table 1 gives us the general summary of our Data set. There are 18 variables which all are categorical variable. All of these variable are character expect “ID” and “Assigned ID” which they are interger. We will focus only two variable in our study “Age Group” and “Client gender”. There are 10 categories in “Age Group” that is 19 and younger, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80-89, 90+, unknown.There are 2 cases in “Client gender” male and female.</p>
 <pre class="r"><code>covid19_data &lt;- covid19_data %&gt;%
   select(`Age Group`, `Client Gender`)</code></pre>
-<p>There are 18 variables which all are categorical variable. All of these variable are character expect “ID” and “Assigned ID” which they are interger. We will focus only two variable in our study “Age Group” and “Client gender”. There are 10 categories in “Age Group” that is 19 and younger, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80-89, 90+, unknown.There are 2 cases in “Client gender” male and female.</p>
 <pre class="r"><code>covid19_data_summary &lt;- covid19_data %&gt;%
   group_by(`Age Group`) %&gt;%
-  summarise(count = n())
-covid19_data_summary</code></pre>
-<pre><code>## # A tibble: 10 x 2
-##    `Age Group`    count
-##    &lt;chr&gt;          &lt;int&gt;
-##  1 19 and younger  1200
-##  2 20 to 29 Years  2714
-##  3 30 to 39 Years  2519
-##  4 40 to 49 Years  2325
-##  5 50 to 59 Years  2616
-##  6 60 to 69 Years  1767
-##  7 70 to 79 Years  1108
-##  8 80 to 89 Years  1550
-##  9 90 and older    1114
-## 10 NaN               29</code></pre>
+  summarise(count = n())</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>covid19_data_summary &lt;- 
+  dplyr::tibble(
+    Age_group = covid19_data_summary$`Age Group`,
+    count = covid19_data_summary$count
+  )
+gt_tbl &lt;- gt(covid19_data_summary)
+gt_tbl &lt;- 
+  gt_tbl %&gt;%
+  tab_header(
+    title = &quot;Table 2: the counts of infection at each age group&quot;)
+gt_tbl</code></pre>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#pixqwbmyfw .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#pixqwbmyfw .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pixqwbmyfw .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#pixqwbmyfw .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#pixqwbmyfw .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pixqwbmyfw .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pixqwbmyfw .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#pixqwbmyfw .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#pixqwbmyfw .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#pixqwbmyfw .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#pixqwbmyfw .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#pixqwbmyfw .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pixqwbmyfw .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pixqwbmyfw .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#pixqwbmyfw .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#pixqwbmyfw .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#pixqwbmyfw .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#pixqwbmyfw .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pixqwbmyfw .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#pixqwbmyfw .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pixqwbmyfw .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#pixqwbmyfw .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#pixqwbmyfw .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pixqwbmyfw .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pixqwbmyfw .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#pixqwbmyfw .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pixqwbmyfw .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#pixqwbmyfw .gt_left {
+  text-align: left;
+}
+
+#pixqwbmyfw .gt_center {
+  text-align: center;
+}
+
+#pixqwbmyfw .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#pixqwbmyfw .gt_font_normal {
+  font-weight: normal;
+}
+
+#pixqwbmyfw .gt_font_bold {
+  font-weight: bold;
+}
+
+#pixqwbmyfw .gt_font_italic {
+  font-style: italic;
+}
+
+#pixqwbmyfw .gt_super {
+  font-size: 65%;
+}
+
+#pixqwbmyfw .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="pixqwbmyfw" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  <thead class="gt_header">
+    <tr>
+      <th colspan="2" class="gt_heading gt_title gt_font_normal" style>Table 2: the counts of infection at each age group</th>
+    </tr>
+    <tr>
+      <th colspan="2" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style></th>
+    </tr>
+  </thead>
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Age_group</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">count</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left">19 and younger</td>
+      <td class="gt_row gt_center">1311</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">20 to 29 Years</td>
+      <td class="gt_row gt_center">3049</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">30 to 39 Years</td>
+      <td class="gt_row gt_center">2724</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">40 to 49 Years</td>
+      <td class="gt_row gt_center">2416</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">50 to 59 Years</td>
+      <td class="gt_row gt_center">2720</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">60 to 69 Years</td>
+      <td class="gt_row gt_center">1813</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">70 to 79 Years</td>
+      <td class="gt_row gt_center">1133</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">80 to 89 Years</td>
+      <td class="gt_row gt_center">1557</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">90 and older</td>
+      <td class="gt_row gt_center">1116</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">NaN</td>
+      <td class="gt_row gt_center">33</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
 <pre class="r"><code>percentage &lt;- (2714 + 2519 + 2325 + 2616) / 16942
 percentage</code></pre>
 <pre><code>## [1] 0.6005194</code></pre>
+<p>The percentage calculates the proportion of data that is concentrated between 20 and 60 years old.</p>
 <pre class="r"><code>covid19_data %&gt;% 
   ggplot(aes(x = `Age Group`)) +
   geom_bar() +
@@ -337,27 +735,421 @@ percentage</code></pre>
        title = &quot;Distribution of Age group in 2020 Covid-19 infection&quot;,
        caption = &quot;Source: Toronto Public Health, 2020.&quot;) +
   theme_bw()</code></pre>
-<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>In this graph we find that distribution of Age Group is a little left skewed. Most of the data is center at 20 to 60 years old. About 60% of the data is concentrated at 20 to 60 years old. “20 to 29 years old” has the highest counts 2714. “50 to 59 years old” is the second which has 2616 counts. Therefore, we can conclude that most cases of infection is within age 20 to 60 years old, and they are is high risk of being sick.</p>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>In this graph we find that distribution of Age Group is a little left skewed. Most of the data is center at 20 to 60 years old. About 60% of the data is concentrated at 20 to 60 years old. “20 to 29 years old” has the highest counts 2714 from table 2. “50 to 59 years old” is the second which has 2616 counts from table 2. Therefore, we can conclude that most cases of infection is within age 20 to 60 years old, and people in this age group is at high rik of being sick.</p>
 <pre class="r"><code>covid19_data_male &lt;- covid19_data %&gt;%
   filter(`Client Gender` == &quot;MALE&quot;)
 covid19_data_summary_male &lt;- covid19_data_male %&gt;%
   group_by(`Age Group`) %&gt;%
-  summarise(count = n())
-covid19_data_summary_male</code></pre>
-<pre><code>## # A tibble: 10 x 2
-##    `Age Group`    count
-##    &lt;chr&gt;          &lt;int&gt;
-##  1 19 and younger   596
-##  2 20 to 29 Years  1389
-##  3 30 to 39 Years  1259
-##  4 40 to 49 Years  1050
-##  5 50 to 59 Years  1170
-##  6 60 to 69 Years   888
-##  7 70 to 79 Years   548
-##  8 80 to 89 Years   536
-##  9 90 and older     263
-## 10 NaN               18</code></pre>
+  summarise(count = n())</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>covid19_data_summary_male &lt;- 
+  dplyr::tibble(
+    Age_group = covid19_data_summary_male$`Age Group`,
+    count = covid19_data_summary_male$count
+  )
+gt_tbl &lt;- gt(covid19_data_summary_male)
+gt_tbl &lt;- 
+  gt_tbl %&gt;%
+  tab_header(
+    title = &quot;Table 3: the counts of infection at each age group in male&quot;)
+gt_tbl</code></pre>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#qqdkbcywkq .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#qqdkbcywkq .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qqdkbcywkq .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#qqdkbcywkq .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#qqdkbcywkq .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qqdkbcywkq .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#qqdkbcywkq .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#qqdkbcywkq .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#qqdkbcywkq .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#qqdkbcywkq .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#qqdkbcywkq .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#qqdkbcywkq .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qqdkbcywkq .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#qqdkbcywkq .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#qqdkbcywkq .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#qqdkbcywkq .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#qqdkbcywkq .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#qqdkbcywkq .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qqdkbcywkq .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#qqdkbcywkq .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#qqdkbcywkq .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#qqdkbcywkq .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#qqdkbcywkq .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#qqdkbcywkq .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qqdkbcywkq .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#qqdkbcywkq .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#qqdkbcywkq .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#qqdkbcywkq .gt_left {
+  text-align: left;
+}
+
+#qqdkbcywkq .gt_center {
+  text-align: center;
+}
+
+#qqdkbcywkq .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#qqdkbcywkq .gt_font_normal {
+  font-weight: normal;
+}
+
+#qqdkbcywkq .gt_font_bold {
+  font-weight: bold;
+}
+
+#qqdkbcywkq .gt_font_italic {
+  font-style: italic;
+}
+
+#qqdkbcywkq .gt_super {
+  font-size: 65%;
+}
+
+#qqdkbcywkq .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="qqdkbcywkq" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  <thead class="gt_header">
+    <tr>
+      <th colspan="2" class="gt_heading gt_title gt_font_normal" style>Table 3: the counts of infection at each age group in male</th>
+    </tr>
+    <tr>
+      <th colspan="2" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style></th>
+    </tr>
+  </thead>
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Age_group</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">count</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left">19 and younger</td>
+      <td class="gt_row gt_center">658</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">20 to 29 Years</td>
+      <td class="gt_row gt_center">1540</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">30 to 39 Years</td>
+      <td class="gt_row gt_center">1369</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">40 to 49 Years</td>
+      <td class="gt_row gt_center">1095</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">50 to 59 Years</td>
+      <td class="gt_row gt_center">1221</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">60 to 69 Years</td>
+      <td class="gt_row gt_center">912</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">70 to 79 Years</td>
+      <td class="gt_row gt_center">561</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">80 to 89 Years</td>
+      <td class="gt_row gt_center">539</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">90 and older</td>
+      <td class="gt_row gt_center">267</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">NaN</td>
+      <td class="gt_row gt_center">22</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
 <pre class="r"><code>covid19_data_male %&gt;% 
   ggplot(aes(x = `Age Group`)) +
   geom_bar() +
@@ -366,27 +1158,421 @@ covid19_data_summary_male</code></pre>
        title = &quot;Distribution of Age group in 2020 Covid-19 male infection&quot;,
        caption = &quot;Source: Toronto Public Health, 2020.&quot;) +
   theme_bw()</code></pre>
-<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>In this graph we find that distribution of Age Group in male is also left skewed. It is similar to the first graph that nearly 60% of the data is concentrated at 20 to 60 years old. Therefore, distribution in male group is very similar as in first graph, and 20 and 60 years old in male has highest risk of getting sick.</p>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>In this graph we find that distribution of Age Group in male is also left skewed. It is similar to the first graph that nearly 60% of the data is concentrated at 20 to 60 years old. Therefore, distribution in male group is very similar as in first graph, and 20 and 60 years old in male is also at highest risk of getting sick.</p>
 <pre class="r"><code>covid19_data_female &lt;- covid19_data %&gt;%
   filter(`Client Gender` == &quot;FEMALE&quot;)
 covid19_data_summary_female &lt;- covid19_data_female %&gt;%
   group_by(`Age Group`) %&gt;%
-  summarise(count = n())
-covid19_data_summary_female</code></pre>
-<pre><code>## # A tibble: 10 x 2
-##    `Age Group`    count
-##    &lt;chr&gt;          &lt;int&gt;
-##  1 19 and younger   572
-##  2 20 to 29 Years  1306
-##  3 30 to 39 Years  1235
-##  4 40 to 49 Years  1245
-##  5 50 to 59 Years  1431
-##  6 60 to 69 Years   861
-##  7 70 to 79 Years   542
-##  8 80 to 89 Years   963
-##  9 90 and older     807
-## 10 NaN               11</code></pre>
+  summarise(count = n())</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>covid19_data_summary_female &lt;- 
+  dplyr::tibble(
+    Age_group = covid19_data_summary_female$`Age Group`,
+    count = covid19_data_summary_female$count
+  )
+gt_tbl &lt;- gt(covid19_data_summary_female)
+gt_tbl &lt;- 
+  gt_tbl %&gt;%
+  tab_header(
+    title = &quot;Table 4: the counts of infection at each age group in female&quot;)
+gt_tbl</code></pre>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#dqzoplncwa .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#dqzoplncwa .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dqzoplncwa .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#dqzoplncwa .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#dqzoplncwa .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dqzoplncwa .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dqzoplncwa .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#dqzoplncwa .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#dqzoplncwa .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#dqzoplncwa .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#dqzoplncwa .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#dqzoplncwa .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#dqzoplncwa .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#dqzoplncwa .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#dqzoplncwa .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#dqzoplncwa .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#dqzoplncwa .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#dqzoplncwa .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dqzoplncwa .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#dqzoplncwa .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dqzoplncwa .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#dqzoplncwa .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#dqzoplncwa .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dqzoplncwa .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dqzoplncwa .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#dqzoplncwa .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dqzoplncwa .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#dqzoplncwa .gt_left {
+  text-align: left;
+}
+
+#dqzoplncwa .gt_center {
+  text-align: center;
+}
+
+#dqzoplncwa .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#dqzoplncwa .gt_font_normal {
+  font-weight: normal;
+}
+
+#dqzoplncwa .gt_font_bold {
+  font-weight: bold;
+}
+
+#dqzoplncwa .gt_font_italic {
+  font-style: italic;
+}
+
+#dqzoplncwa .gt_super {
+  font-size: 65%;
+}
+
+#dqzoplncwa .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="dqzoplncwa" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  <thead class="gt_header">
+    <tr>
+      <th colspan="2" class="gt_heading gt_title gt_font_normal" style>Table 4: the counts of infection at each age group in female</th>
+    </tr>
+    <tr>
+      <th colspan="2" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style></th>
+    </tr>
+  </thead>
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Age_group</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">count</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left">19 and younger</td>
+      <td class="gt_row gt_center">621</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">20 to 29 Years</td>
+      <td class="gt_row gt_center">1486</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">30 to 39 Years</td>
+      <td class="gt_row gt_center">1328</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">40 to 49 Years</td>
+      <td class="gt_row gt_center">1290</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">50 to 59 Years</td>
+      <td class="gt_row gt_center">1483</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">60 to 69 Years</td>
+      <td class="gt_row gt_center">883</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">70 to 79 Years</td>
+      <td class="gt_row gt_center">554</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">80 to 89 Years</td>
+      <td class="gt_row gt_center">967</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">90 and older</td>
+      <td class="gt_row gt_center">805</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">NaN</td>
+      <td class="gt_row gt_center">10</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
 <pre class="r"><code>covid19_data_female %&gt;% 
   ggplot(aes(x = `Age Group`)) +
   geom_bar() +
@@ -395,17 +1581,21 @@ covid19_data_summary_female</code></pre>
        title = &quot;Distribution of Age group in 2020 Covid-19 female infection&quot;,
        caption = &quot;Source: Toronto Public Health, 2020.&quot;) +
   theme_bw()</code></pre>
-<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>In this graph we find that distribution of Age Group in female is also left skewed. About 60% of the data still concentrated at 20 to 60 years old. However, the proportion of people in female get covid-19 from 80 to 90 and older is higher than male. We can conclude that female in age group 80 and older have higher chance of getting sick than male, and 20 to 60 years old is still the highest risk among others.</p>
 </div>
 <div id="discussion" class="section level1">
 <h1>Discussion</h1>
-<p>My discussion is based on two variables “Age group” and “Client gender”. Through the distribution of Age group we find that most cases (60% of data) is concentrated at 20 to 60 years old. 20 to 29 years old has the highest counts 2714 and 50 to 59 years old has the second highest counts 2616. Due to the large proportion of cases of infection in 20 to 60 years old we can conclude that 20 to 60 years old people has highest chance of getting covid-19. 20 to 60 years old people is at most risk of being sick, and we should take specific action on protecting those people. When we look at distribution of Age group in male and in female seperately, we find that their distribution are very similar to each other except for 80 and older people. Female people who’s age is 80 and older may have higher risk of getting covid-19 than male in 80 years old and older. Generally, we can conclude that people from 20 to 60 years old is at most risk, and for people who is female and 80 years old and older should be more careful than male.
-In addition, we see that there exist 18 NA cases. Those 18 cases that is non-response, so we should think of what if those infection cases are all male or female. In my opinion, those non-response won’t effect the result too much. Total cases are 16942 counts, but only 18 cases is non-response. The proportion of non-response rate is very low (18/16942), therefore we it won’t effect my result a lot.</p>
+<p>My discussion is based on two variables “Age group” and “Client gender”. Through the distribution of Age group we find that most cases (60% of data) is concentrated at 20 to 60 years old. 20 to 29 years old has the highest counts 2714 and 50 to 59 years old has the second highest counts 2616. Due to the large proportion of cases of infection in 20 to 60 years old we can conclude that 20 to 60 years old people has highest chance of getting covid-19. 20 to 60 years old people is at most risk of being sick, and we should take specific action on protecting those people. When we look at distribution of Age group in male and in female seperately, we find that their distribution are very similar to each other except for 80 and older people. Female people who’s age is 80 and older may have higher risk of getting covid-19 than male in 80 years old and older. Generally, we can conclude that people from 20 to 60 years old is at most risk, and for people who is female and 80 years old and older should be more careful than male.</p>
+<p>In addition, we see that there exist 18 NA cases. Those 18 cases that is non-response, so we should think of what if those infection cases are all male or female. In my opinion, those non-response won’t effect the result too much. Total cases are 16942 counts, but only 18 cases is non-response. The proportion of non-response rate is very low (18/16942), therefore we it won’t effect my result a lot.</p>
 <div id="weakness-and-next-steps" class="section level2">
 <h2>Weakness and next steps</h2>
-<p>I believe the weakness in my stduy is lack of data of population in Toronto. The data does not include the total population of each age group in Toronto. If the population of young people is large and population of elder is small, then our analysis is not accurate. In other word, there must be lots of cases of infection in 20 to 60 years old if population of 20 to 60 years old is large. Our next step should be finding data of population in each group in order to verify our result.</p>
+<p>I believe the weakness in my stduy is lack of data of population in Toronto. The data does not include the total population of each age group in Toronto. If the population of young people is large and population of elder is small, then our analysis is not accurate. In other word, there must be lots of cases of infection in 20 to 60 years old if population of 20 to 60 years old is large. Our next step should be finding data of population in each group in toronto in order to verify our result.</p>
 </div>
+</div>
+<div id="my-github-link-to-this-analysis" class="section level1">
+<h1>my github link to this analysis</h1>
+<p>code and data supporting this analysis is available at: <a href="https://github.com/henrywangyirun/STA304-hw1" class="uri">https://github.com/henrywangyirun/STA304-hw1</a></p>
 </div>
 <div id="reference" class="section level1">
 <h1>Reference</h1>
