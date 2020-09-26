@@ -1,5 +1,5 @@
 ---
-title: "Different risk of geting Covid-19 at different Age level"
+title: "Different risk of getting Covid-19 at different Age level"
 author: "Yirun Wang"
 date: 2020-09-23T21:13:14-05:00
 categories: ["R"]
@@ -93,7 +93,7 @@ covid19_data %>%
   theme_bw()
 ```
 
-In this graph we find that distribution of Age Group is a little left skewed. Most of the data is center at 20 to 60 years old. About 60% of the data is concentrated at 20 to 60 years old. "20 to 29 years old" has the highest counts 2714 from table 2. "50 to 59 years old" is the second which has 2616 counts from table 2. Therefore, we can conclude that most cases of infection is within age 20 to 60 years old, and people in this age group is at high rik of being sick.
+In this graph we find that distribution of Age Group is a little right skewed (positive skewness). Most of the data is centered at 20 to 60 years old. About 60% of the data is concentrated at 20 to 60 years old. "20 to 29 years old" has the highest counts 2714 from table 2. "50 to 59 years old" is the second which has 2616 counts from table 2. Therefore, we can conclude that most cases of infection is within age 20 to 60 years old, and people in this age group is at high rik of being sick.
 
 ```{r}
 covid19_data_male <- covid19_data %>%
@@ -125,7 +125,7 @@ covid19_data_male %>%
   theme_bw()
 ```
 
-In this graph we find that distribution of Age Group in male is also left skewed. It is similar to the first graph that nearly 60% of the data is concentrated at 20 to 60 years old. Therefore, distribution in male group is very similar as in first graph, and 20 and 60 years old in male is also at highest risk of getting sick.
+In this graph we find that distribution of Age Group in male is also right skewed. It is similar to the first graph that nearly 60% of the data is concentrated at 20 to 60 years old. Therefore, distribution in male group is very similar as in first graph, and 20 and 60 years old in male is also at highest risk of getting sick.
 
 ```{r}
 covid19_data_female <- covid19_data %>%
@@ -158,7 +158,7 @@ covid19_data_female %>%
   theme_bw()
 ```
 
-In this graph we find that distribution of Age Group in female is also left skewed. About 60% of the data still concentrated at 20 to 60 years old. However, the proportion of people in female get covid-19 from 80 to 90 and older is higher than male. We can conclude that female in age group 80 and older have higher chance of getting sick than male, and 20 to 60 years old is still the highest risk among others.
+In this graph we find that distribution of Age Group in female is also right skewed. About 60% of the data still concentrated at 20 to 60 years old. However, the proportion of people in female get covid-19 from 80 to 90 and older is higher than male. We can conclude that female in age group 80 and older have higher chance of getting sick than male, and 20 to 60 years old is still the highest risk among others.
 
 # Discussion
 
